@@ -344,7 +344,8 @@ class Page:
                 # Process header
                 level = len(line.split(" ")[0])
                 title = line.split(" ", 1)[1]
-                title_short = title.split("(")[0].split("<")[0].strip().replace("`", "")
+                title_short = "".join(c for c in title if ord(c) < 256).strip()
+                title_short = title_short.split("(")[0].split("<")[0].strip().replace("`", "")
                 headers.append((level, title_short))
                 parts.append((level, title_short, title))
             else:
@@ -366,7 +367,7 @@ class Page:
                     .replace("`", "<code>", 1)
                     .replace("`", "</code>", 1)
                 )
-                ts = title_short.lower()
+                ts = title_short.lower().replace(" ", "-")
                 if part[0] == 1:
                     htmlparts.append(self.date_and_tags_html)
                     htmlparts.append("<h1>%s</h1>" % title_html)
