@@ -1,48 +1,87 @@
-<img src='pygfx.png' width='96px' height='96px' />
+<img src='pygfx1024.png' width='96px' height='96px' />
 
-# Sponsoring Pygfx
+# Sponsoring / support contracts
 
 
-## 🧑‍🤝‍🧑 Keep Pygfx independent and active
+## <i class='fas'></i> Keep Pygfx independent
 
 Maintaining and growing wgpu and Pygfx costs time and dedication. We rely on sponsors to maintain (and grow) the project further.
-If you represent a company / group that relies on Pygfx or wgpu-pu, we kindly ask for a sponsorship. That way we can keep replying to issues, review pull request, and move Pygfx further.
+If you represent a company / group that relies on Pygfx or wgpu-pu, please consider a sponsorship to help move Pygfx further, and get the support that you need.
 
 
-## 🎁 What you get
+## <i class='fas'></i> How funds are used
 
-* Most importantly, sponsors help ensure that Pygfx is actively maintained!
-* Sponsors also get priority on bug reports and feature requests.
-* An honorable mention on the front page of pygfx.org!
-* In the top tiers, one-on-one support to help you use Pygfx to the max.
-
-We employ a few different [sponsorship tiers](https://github.com/sponsors/pygfx).
+Funds for Pygfx are primarily used to fund our developer time. This includes the work on Pygfx itself, keeping wgpu-py up-to-date with the development of WebGPU, and maintaining other dependencies like the render canvas.
+Surplus funds are used as a buffer (to create some runway), onboarding additional developers, and maybe organize an event.
 
 
-## 🧾 Ways to sponsor Pygfx
+## <i class='fas'></i> What you get
 
-We provide a few ways to get funds to us. If you have questions, do not hesitate to reach out to [support@pygfx.com](mailto:support@pygfx.com)!
+A sponsorship represents a support contract that offers the following benefits:
 
-### Directly
-
-The pygfx-org is a trademark of *Almar Klein scientific computing*, based in The Netherlands.
-We can provide an invoice and you pay by bank transfer.
-Incoming funds for Pygfx are received at a dedicated bank account, and insights into how the funds are spent are published on a yearly basis.
-
-
-### Via Github
-
-You can also sponsor via Github's sponsor system: [https://github.com/sponsors/pygfx](https://github.com/sponsors/pygfx). These funds are payed out by GitHub to the same bank account as mentioned above.
+* Ongoing development on the project.
+* Priority on bug reports and feature requests.
+* Company logo on the front page of pygfx.org.
+* In the top tiers: in-person support to help you use Pygfx to the max.
 
 
-### Via OpenCollective
+## <i class='fas'></i> Tiers
 
-You can sponsor us via [https://opencollective.com/pygfx](https://opencollective.com/pygfx). These funds and how they are spent are publicly visible.
+<div class=sponsor-tier-box>
+    <h3><i class='far'></i>Bronze tier at €500 per month</h3>
+    <i>Your company or group relies on pygfx, and wants to help fund it.</i>
+    <ul>
+        <li>Company name (with link) on pygfx.org</li>
+    </ul>
+</div>
+
+<div class=sponsor-tier-box>
+    <h3><i class='far'></i>Silver tier at €1000 per month</h3>
+    <i>Your company or group relies on pygfx, and wants to make sure it's actively maintained.</i>
+    <ul>
+        <li>Small company logo (with link) on pygfx.org</li>
+        <li>Prioritized issues and bug reports</li>
+    </ul>
+</div>
+
+<div class=sponsor-tier-box>
+    <h3><i class='far'></i>Gold tier at €2000 per month</h3>
+    <i>Your company or group relies on pygfx, and wants to help move it forward.</i>
+    <ul>
+        <li>Large company logo (with link) on pygfx.org</li>
+        <li>Prioritized issues and bug reports</li>
+    </ul>
+</div>
+
+<div class=sponsor-tier-box>
+    <h3><i class='far'></i>Platinum tier at €3000 per month</h3>
+    <i>Your company or group relies on pygfx, you want to help move it forward, and want support for your developers.</i>
+    <ul>
+        <li>Large company logo (with link) on pygfx.org</li>
+        <li>Prioritized issues and bug reports</li>
+        <li>Private support meetings (up to 5h per month)</li>
+    </ul>
+</div>
+
+<div class=sponsor-tier-box>
+    <h3><i class='far'></i>Custom</h3>
+    We're happy to discuss other options or one-time contributions. Feel free to <a href='mailto:support@pygfx.com'>reach out</a>!
+</div>
 
 
-## 💰 How funds are spent
+## <i class='fas'></i> Payment options
 
-Sponsorship funds for Pygfx are primarily used to fund our developer time.
-If we receive more funds than we can spend, the surplus acts as a buffer to create runway. If that buffer becomes large enough we plan to onboard additional developers.
+We support a few different payment options. If you have questions or suggestions, do not hesitate to reach out to [support@pygfx.com](mailto:support@pygfx.com)!
+
+* We can provide an **invoice** and you pay by **bank transfer**. We can also setup a formal support contract if needed.
+* You can also sponsor via **Github's sponsors**: [https://github.com/sponsors/pygfx](https://github.com/sponsors/pygfx)
+* You can sponsor us via [opencollective](https://opencollective.com/pygfx). These funds and how they are spent are publicly visible.
 
 
+## <i class='fas'></i> Legal stuff
+
+Funds are managed via *Almar Klein Scientific Computing*:
+
+* Location: Almere, The Netherlands
+* CoC number: 61855448
+* Tax id: NL001380600B82

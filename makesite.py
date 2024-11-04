@@ -45,50 +45,63 @@ REDIRECT = '<html><head><meta HTTP-EQUIV="REFRESH" content="0; url=URL"></head><
 def create_menu(page):
     """ Create the menu for the given page.
     """
-    menu = [""]
+    menu = ""
 
-    menu.append('<span class="header">Pages</span>')
-    for title, target in NAV.items():
-        if isinstance(target, str):
-            if target.startswith(("https://", "http://", "/")):
-                menu.append(f"<a href='{target}'>{title}</a>")
+    if True:
+        menuitems = []
+        menuitems.append('<span class="header">Pages</span>')
+        for title, target in NAV.items():
+            if isinstance(target, str):
+                if target.startswith(("https://", "http://", "/")):
+                    menuitems.append(f"<a href='{target}'>{title}</a>")
+                else:
+                    menuitems.append(f"<a href='{target}.html'>{title}</a>")
+                    if target == page.name:
+                        menuitems[-1] = menuitems[-1].replace("<a ", '<a class="current" ')
+            elif isinstance(target, dict):
+                menuitems.append(f"<a href='{target.get('', '#')}.html'>{title}</a>")
+                if target.get("", None) == page.name:
+                    menuitems[-1] = menuitems[-1].replace("<a ", '<a class="current" ')
+                if True:  # any(page.name == subtarget for subtarget in target.values()):
+                    for subtitle, subtarget in target.items():
+                        if not subtitle:
+                            continue
+                        if subtarget.startswith(("https://", "http://", "/")):
+                            menuitems.append(f"<a class='sub' href='{subtarget}'>{subtitle}</a>")
+                        else:
+                            menuitems.append(
+                                f"<a class='sub' href='{subtarget}.html'>{subtitle}</a>"
+                            )
+                            if subtarget == page.name:
+                                menuitems[-1] = menuitems[-1].replace("class='", "class='current ")
             else:
-                menu.append(f"<a href='{target}.html'>{title}</a>")
-                if target == page.name:
-                    menu[-1] = menu[-1].replace("<a ", '<a class="current" ')
-        elif isinstance(target, dict):
-            menu.append(f"<a href='{target.get('', '#')}.html'>{title}</a>")
-            if target.get("", None) == page.name:
-                menu[-1] = menu[-1].replace("<a ", '<a class="current" ')
-            if True:  # any(page.name == subtarget for subtarget in target.values()):
-                for subtitle, subtarget in target.items():
-                    if not subtitle:
-                        continue
-                    if subtarget.startswith(("https://", "http://", "/")):
-                        menu.append(f"<a class='sub' href='{subtarget}'>{subtitle}</a>")
-                    else:
-                        menu.append(
-                            f"<a class='sub' href='{subtarget}.html'>{subtitle}</a>"
-                        )
-                        if subtarget == page.name:
-                            menu[-1] = menu[-1].replace("class='", "class='current ")
-        else:
-            raise RuntimeError(f"Unexpected NAV entry {type(target)}")
+                raise RuntimeError(f"Unexpected NAV entry {type(target)}")
+
+        menu += "<div class='block1'>"
+        menu += "<br>".join(menuitems)
+        menu += "</div>"
 
     subtitles = [title for level, title in page.headers if level == 2]
     if subtitles:
-        menu.append("<br /><span class='header'>Current page</span>")
-        menu += [
+        menuitems = []
+        menuitems.append("<span class='header'>Current page</span>")
+        menuitems += [
             f"<a class='sub' href='#{title.lower()}'>{title}</a>" for title in subtitles
         ]
 
-    if NEWS:
-        menu.append('<br /><span class="header">News</span>')
-        for title, url in NEWS.items():
-            # menu.append(f"<a class='sub' href='{url}'>{title}</a>")
-            menu.append(f"<a href='{url}'>{title}</a>")
+        menu += "<br>"
+        menu += "<div class='block2'>"
+        menu += "<br>".join(menuitems)
+        menu += "</div>"
 
-    return "<br />".join(menu)
+    # if NEWS:
+    #     menuitems = []
+    #     menuitems.append('<br /><span class="header">News</span>')
+    #     for title, url in NEWS.items():
+    #         # menuitems.append(f"<a class='sub' href='{url}'>{title}</a>")
+    #         menuitems.append(f"<a href='{url}'>{title}</a>")
+
+    return menu
 
 
 def create_blog_relatated_pages(posts):
@@ -345,6 +358,10 @@ class Page:
                 level = len(line.split(" ")[0])
                 title = line.split(" ", 1)[1]
                 title_short = "".join(c for c in title if ord(c) < 256).strip()
+                while "<i" in title_short:
+                    i1 = title_short.find("<i")
+                    i2 = title_short.find("</i>", i1)
+                    title_short = title_short[:i1] + title_short[i2+4:]
                 title_short = title_short.split("(")[0].split("<")[0].strip().replace("`", "")
                 headers.append((level, title_short))
                 parts.append((level, title_short, title))
