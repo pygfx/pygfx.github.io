@@ -23,8 +23,8 @@ Pygfx (py-graphics) is built on WebGPU, enabling superior performance and reliab
 
 ## <i class='fas'></i> News
 
+* `04-10-2024`  Released [wgpu-py v0.19.0](https://github.com/pygfx/wgpu-py/releases/tag/v0.19.0)
 * `25-09-2024`  Released [pygfx v0.5.0](https://github.com/pygfx/pygfx/releases/tag/v0.5.0)
-* `17-09-2024`  Released [wgpu-py v0.18.1](https://github.com/pygfx/wgpu-py/releases/tag/v0.18.1)
 
 
 ## <i class='fas'></i> Getting started
