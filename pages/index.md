@@ -130,18 +130,21 @@ The following notable projects build on top of Pygfx or wgpu-py:
 
 Pygfx is open source and free to use. To develop these projects we rely on funding from our sponsors. The more groups contribute, the more time we can spend on moving these projects forwards. [Learn more ...](sponsor.html)
 
-<div class=sponsorbox>
-    <h3>Ramona optics</h3>
-    <img src='https://www.ramonaoptics.com/icons/icon-256x256.png' /><br>
-    <a href='https://www.ramonaoptics.com/'>https://ramonaoptics.com</a>
-</div>
 
-<div class=sponsorbox>
-    <h3>The Flatiron institute</h3>
-    <img src='https://sf-web-assets-prod.s3.amazonaws.com/wp-content/uploads/2023/09/18102348/Simons-Foundation-Logo_blue.png' /><br>
-    <a href='https://www.simonsfoundation.org/flatiron/'>https://simonsfoundation.org/flatiron/</a>
-</div>
+<div class='project-container'>
 
+    <div class=sponsorbox>
+        <h3>Ramona optics</h3>
+        <a href='https://www.ramonaoptics.com/'>https://ramonaoptics.com</a><br>
+        <img height=75 src='https://www.ramonaoptics.com/icons/icon-256x256.png' />
+    </div>
+
+    <div class=sponsorbox>
+        <h3>The Flatiron institute</h3>
+        <a href='https://www.simonsfoundation.org/flatiron/'>https://simonsfoundation.org/flatiron/</a><br>
+        <img height=50 src='https://sf-web-assets-prod.s3.amazonaws.com/wp-content/uploads/2023/09/18102348/Simons-Foundation-Logo_blue.png' />
+    </div>
+</div>
 
 
 ## <i class='fas'></i> Core team
