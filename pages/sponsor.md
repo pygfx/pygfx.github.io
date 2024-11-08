@@ -3,10 +3,12 @@
 # Sponsoring / support contracts
 
 
-## <i class='fas'></i> Keep Pygfx independent
+## <i class='fas'></i> Keep Pygfx going
 
 Maintaining and growing wgpu and Pygfx costs time and dedication. We rely on sponsors to maintain (and grow) the project further.
 If you represent a company / group that relies on Pygfx or wgpu-pu, please consider a sponsorship to help move Pygfx further, and get the support that you need.
+
+As a sponsor you don't pay for *using* Pygfx, you pay for its continued growth. And by contributing together, Pygfx stays independent, in the spirit of Open Source collaboration.
 
 
 ## <i class='fas'></i> How funds are used
@@ -19,7 +21,7 @@ Surplus funds are used as a buffer (to create some runway), onboarding additiona
 
 A sponsorship represents a support contract that offers the following benefits:
 
-* Ongoing development on the project.
+* Ongoing development of the project.
 * Priority on bug reports and feature requests.
 * Company logo on the front page of pygfx.org.
 * In the top tiers: in-person support to help you use Pygfx to the max.
@@ -73,7 +75,7 @@ A sponsorship represents a support contract that offers the following benefits:
 
 We support a few different payment options. If you have questions or suggestions, do not hesitate to reach out to [support@pygfx.com](mailto:support@pygfx.com)!
 
-* We can provide an **invoice** and you pay by **bank transfer**. We can also setup a formal support contract if needed.
+* We can provide an **invoice** and you pay by **bank transfer**. We can also setup a formal contract if needed.
 * You can also sponsor via **Github's sponsors**: [https://github.com/sponsors/pygfx](https://github.com/sponsors/pygfx)
 * You can sponsor us via [opencollective](https://opencollective.com/pygfx). These funds and how they are spent are publicly visible.
 
