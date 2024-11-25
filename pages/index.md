@@ -23,8 +23,60 @@ Pygfx (py-graphics) is built on WebGPU, enabling superior performance and reliab
 
 ## <i class='fas'></i> News
 
-* `04-10-2024`  Released [wgpu-py v0.19.0](https://github.com/pygfx/wgpu-py/releases/tag/v0.19.0)
-* `25-09-2024`  Released [pygfx v0.5.0](https://github.com/pygfx/pygfx/releases/tag/v0.5.0)
+<div id='news-div'></div>
+
+<script>
+
+async function get_release_info(repo) {
+    let url = "https://api.github.com/repos/" + repo + "/releases?per_page=2";
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        let json = await response.json();
+        let releases = [];
+        for (let i=0; i<json.length; i++) {
+            let date = new Date(json[i].published_at);
+            info = {
+                name: repo.split("/").slice(-1),
+                tag: json[i].tag_name,
+                url: json[i].html_url,
+                date: date,
+            };
+            releases.push(info);
+        }
+        return releases;
+    } catch (error) {
+        console.warn("Could not fetch release info for "+ repo + ": " + error.message);
+    }
+}
+
+async function create_news() {
+    let repos = ["pygfx/pygfx", "pygfx/wgpu-py", "pygfx/rendercanvas"];
+    let releases = [];
+    for (let repo of repos) {
+        let repo_releases = await get_release_info(repo);
+        releases.push(...repo_releases);
+    }
+
+    releases.sort((a, b) => (a.date < b.date));
+
+    let news_div = document.getElementById("news-div");
+    news_div.innerHTML = "";
+    let ul = document.createElement("ul");
+    news_div.appendChild(ul);
+    for (release of releases) {
+        // let d = release.date.toUTCString().split(" ").slice(0, 4).join(" ");
+        let d = release.date.toISOString().split("T")[0].split("-").reverse().join("-")
+        let li = document.createElement("li");
+        li.innerHTML = "<code>" + d + "</code> Release " + release.name + " <a href='" + release.url + "'>" + release.tag + "</a>"
+        ul.appendChild(li);
+    }
+}
+
+create_news();
+</script>
 
 
 ## <i class='fas'></i> Getting started
