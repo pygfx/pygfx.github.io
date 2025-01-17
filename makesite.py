@@ -8,6 +8,7 @@ Then for pygfx.org
 import os
 import shutil
 import webbrowser
+import collections
 
 import markdown
 import pygments
@@ -19,18 +20,47 @@ TITLE = "pygfx.org"
 
 NAV = {
     "Main": "index",
+    "Blog": "blog",
     "Sponsor": "sponsor",
-    # "Blog": "blog",
-    # "Archive": "archive",
+    "Archive": "archive",
     # "Social": {
     #     'Twitter': 'https://twitter.com/pygfx',
     # },
 }
 
-NEWS = {
-    "Released pygfx v0.5.0": "https://github.com/pygfx/pygfx/releases/tag/v0.5.0",
-    "Released wgpu-py v0.18.1": "https://github.com/pygfx/wgpu-py/releases/tag/v0.18.1",
-}
+NEWS = {}  # generated front-end
+
+EXTERNAL_BLOG_POSTS = [
+    {
+        "title": "Rendering thick lines with dashes",
+        "date": "2024-02-23",
+        "url": "https://almarklein.org/line_rendering.html",
+        "thumbnail": "https://almarklein.org/thumbs/line_rendering.jpg",
+    },
+    {
+        "title": "GPU triangle tricks",
+        "date": "2024-02-22",
+        "url": "https://almarklein.org/triangletricks.html",
+        "thumbnail": "https://almarklein.org/thumbs/triangletricks.jpg",
+    },
+    {
+        "title": "On WebGPU, wgpu-py, and pygfx",
+        "date": "2023-02-04",
+        "url": "https://almarklein.org/wgpu.html",
+        "thumbnail": "https://almarklein.org/thumbs/wgpu.jpg",
+    },
+    {
+        "title": "Gamma and sRGB in visualisation",
+        "date": "2022-09-29",
+        "url": "https://almarklein.org/gamma.html",
+        "thumbnail": "https://almarklein.org/thumbs/gamma.jpg",
+    },
+]
+
+ExternalPage = collections.namedtuple("ExternalPage", ["title", "date", "url", "thumbnail"])
+EXTERNAL_BLOG_POSTS = [ExternalPage(**x) for x in EXTERNAL_BLOG_POSTS]
+EXTERNAL_BLOG_POSTS.sort(key=lambda p: p.date)
+
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(THIS_DIR, "output")
@@ -104,20 +134,16 @@ def create_menu(page):
     return menu
 
 
-def create_blog_relatated_pages(posts):
-    """ Create blog overview page.
+def create_blog_related_pages(posts):
+    """ Create blog overview page and archive.
     """
-
-    # Filter and sort
-    posts = [
-        post for post in posts.values() if post.date and not post.name.startswith("_")
-    ]
-    posts.sort(key=lambda p: p.date)
 
     blogpages = {}
 
     # Generate overview page
     html = ["<h1>Blog</h1>"]
+
+    html += ["\n\n<h2>Status updates</h2>"]
     for page in reversed(posts):
         text = page.md
         if "<!-- END_SUMMARY -->" in text:
@@ -127,16 +153,26 @@ def create_blog_relatated_pages(posts):
         else:
             summary = text.split("## ")[0]
         summary = summary.split("-->")[-1]
+        datespan = f"<span class='post-date-tags'>{page.date}</span>"
 
-        # html.append("<hr />" + page.date_and_tags_html)
-        html.append("<div style='border-top: 1px solid #ddd;'>" + page.date_and_tags_html + "</div>")
+        html.append(f"<div style='border-top: 1px solid #ddd;'>{datespan}</div>")
         html.append(f'<a class="header" href="{page.name}.html"><h3>{page.title}</h3></a>')
         if page.thumbnail:
             html.append(f"<a href='{page.name}.html'><img src='{page.thumbnail}' class='thumb' /></a>")
-        # html.append(f'<h2>{page.title}</h2>')
-        html.append("<p>" + summary + "</p>")
-        html.append(f"<a href='{page.name}.html'>read more ...</a><br /><br />")
-        html.append("<div style='clear: both;'></div>")
+        html.append("<p>" + summary )
+        html.append(f"<a href='{page.name}.html'>Read more ...</a>")
+        html.append("</p>")
+        html.append("<br /><br /><div style='clear: both;'></div>")
+
+    html += ["\n\n<h2>External blog posts</h2>"]
+    for page in reversed(EXTERNAL_BLOG_POSTS):
+        datespan = f"<span class='post-date-tags'>{page.date}</span>"
+        html.append(f"<div style='border-top: 1px solid #ddd;'>{datespan}</div>")
+        if page.thumbnail:
+            html.append(f"<a href='{page.url}'><img src='{page.thumbnail}' class='thumb' /></a>")
+        html.append(f'<a class="header" href="{page.url}"><h3>{page.title}</h3></a>')
+        html.append("<br /><br /><div style='clear: both;'></div>")
+
     blogpages["overview"] = "\n".join(html)
 
     # Generate archive page
@@ -176,14 +212,24 @@ def create_assets():
             pages[name] = Page(name, md)
 
     # Collect blog posts
-    posts = {}
+    posts = []
     for fname in os.listdir(POSTS_DIR):
         if fname.lower().endswith(".md"):
             name = fname.split(".")[0].lower()
             assert name not in pages, f"blog post slug not allowed: {name}"
             with open(os.path.join(POSTS_DIR, fname), "rb") as f:
                 md = f.read().decode()
-            posts[name] = Page(name, md)
+            posts.append(Page(name, md))
+
+    # Sort, select publishable, create shortlist
+    posts.sort(key=lambda p: p.date)
+    publishable_posts = [post for post in posts if post.date and not post.name.startswith("_")]
+
+    # Get recent posts
+    recent_posts = []
+    recent_posts += publishable_posts[-1:]
+    recent_posts += EXTERNAL_BLOG_POSTS[-1:]
+    recent_posts_str = ",".join(str({"title": p.title, "date": p.date, "url": p.url}) for p in recent_posts)
 
     # Get template
     with open(os.path.join(THIS_DIR, "template.html"), "rb") as f:
@@ -196,7 +242,7 @@ def create_assets():
     )
 
     # Generate posts
-    for page in posts.values():
+    for page in posts:
         page.prepare(pages.keys())
         title = page.title
         menu = create_menu(page)
@@ -215,11 +261,14 @@ def create_assets():
             title=title, style=css, body=page.to_html(), menu=menu
         )
         print("generating page", page.name + ".html")
+        if page.name == "index":
+            js = f"var recent_blog_posts = [{recent_posts_str}];"
+            html = html.replace("var recent_blog_posts = [];", js)
         assets[page.name + ".html"] = html.encode()
 
     # Generate special pages
     fake_md = ""  # "##index\n## archive\n## tags"
-    for name, html in create_blog_relatated_pages(posts).items():
+    for name, html in create_blog_related_pages(publishable_posts).items():
         name = "blog" if name == "overview" else name
         print("generating page", name + ".html")
         assets[f"{name}.html"] = html_template.format(
@@ -267,6 +316,7 @@ class Page:
         self.md = markdown
         self.parts = []
         self.headers = []
+        self.url = f"{name}.html"
 
         self.title = name
         if markdown.startswith("# "):
@@ -290,10 +340,6 @@ class Page:
                 x.strip()
                 for x in markdown.split("<!-- TAGS:")[-1].split("-->")[0].split(",")
             ]
-
-        self.date_and_tags_html = ""
-        if self.date:
-            self.date_and_tags_html = f"<span class='post-date-tags'>{', '.join(self.tags)}&nbsp;&nbsp;-&nbsp;&nbsp;{self.date}</span>"
 
         self.thumbnail = None
         for fname in ["thumbs/" + self.name + ".jpg"]:
@@ -386,7 +432,7 @@ class Page:
                 )
                 ts = title_short.lower().replace(" ", "-")
                 if part[0] == 1:
-                    htmlparts.append(self.date_and_tags_html)
+                    htmlparts.append(f"<span class='post-date-tags'>{self.date}</span>")
                     htmlparts.append("<h1>%s</h1>" % title_html)
                 elif part[0] == 2 and title_short:
                     htmlparts.append(

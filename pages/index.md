@@ -1,3 +1,4 @@
+
 <center>
 <img src='pygfx1024.png' width='96px' height='96px' />
 <span style='font-size:100px; position: relative; top: -20px; left: 10px;'>Pygfx</span><br>
@@ -17,7 +18,6 @@ Pygfx (py-graphics) is built on WebGPU, enabling superior performance and reliab
 <a class='button' href='https://pygfx.readthedocs.io/stable/_gallery/index.html'><i class='fas'></i> Gallery</a>
 <a class='button' href='https://pygfx.readthedocs.io'><i class='fas'></i> Documentation</a>
 <a class='button yellow' href='sponsor.html'><i class='fas'></i> Support & Sponsoring</a>
-
 </center>
 
 
@@ -36,10 +36,13 @@ Pygfx (py-graphics) is built on WebGPU, enabling superior performance and reliab
 
 <script>
 
-var release_infos = [];
+var recent_blog_posts = [];
+
+var news_items = [];
+
 
 async function get_release_info(repo) {
-    let url = "https://api.github.com/repos/" + repo + "/releases?per_page=2";
+    let url = "https://api.github.com/repos/" + repo + "/releases?per_page=1";
     try {
         let response = await fetch(url);
         if (!response.ok) {
@@ -69,14 +72,18 @@ function show_news() {
     news_div.innerHTML = "";
     let ul = document.createElement("ul");
     news_div.appendChild(ul);
-    for (let release of release_infos) {
-        // let d = release.date.toUTCString().split(" ").slice(0, 4).join(" ");
-        let d = release.date.toISOString().split("T")[0].split("-").reverse().join("-")
+    for (let news_item of news_items) {
+        // let d = news_item.date.toUTCString().split(" ").slice(0, 4).join(" ");
+        let d = news_item.date.toISOString().split("T")[0].split("-").reverse().join("-")
         let li = document.createElement("li");
-        li.innerHTML = "<code>" + d + "</code> Release " + release.name + " <a href='" + release.url + "'>" + release.tag + "</a>"
+        if (news_item.tag) {
+            li.innerHTML = "<code>" + d + "</code> Release " + news_item.name + " <a href='" + news_item.url + "'>" + news_item.tag + "</a>"
+        } else {
+             li.innerHTML = "<code>" + d + "</code> Blog post <a href='" + news_item.url + "'>" + news_item.title + "</a>"
+        }
         ul.appendChild(li);
     }
-    for (let i=release_infos.length; i<6; i++) {
+    for (let i=news_items.length; i<6; i++) {
         let li = document.createElement("li");
         li.innerHTML = "..."
         ul.appendChild(li);
@@ -85,19 +92,23 @@ function show_news() {
 
 
 async function create_news() {
-    let repos = ["pygfx/pygfx", "pygfx/wgpu-py", "pygfx/rendercanvas"];
-    let releases = [];
+    let repos = ["pygfx/pygfx", "pygfx/wgpu-py", "pygfx/rendercanvas", "pygfx/pylinalg"];
+    let pending_news_items = [];
     for (let repo of repos) {
         let repo_releases = await get_release_info(repo);
-        releases.push(...repo_releases);
+        pending_news_items.push(...repo_releases);
+    }
+    for (let post of recent_blog_posts) {
+        post.date = new Date(post.date);
+        pending_news_items.push(post)
     }
 
-    releases.sort((a, b) => (a.date < b.date));
+    pending_news_items.sort((a, b) => (a.date < b.date));
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-    for (let release of releases) {
-        release_infos.push(release);
+    for (let news_item of pending_news_items) {
+        news_items.push(news_item);
         show_news()
         await sleep(200);
     }
