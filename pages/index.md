@@ -23,9 +23,20 @@ Pygfx (py-graphics) is built on WebGPU, enabling superior performance and reliab
 
 ## <i class='fas'></i> News
 
-<div id='news-div'></div>
+<div id='news-div'>
+<ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+</div>
 
 <script>
+
+var release_infos = [];
 
 async function get_release_info(repo) {
     let url = "https://api.github.com/repos/" + repo + "/releases?per_page=2";
@@ -52,6 +63,27 @@ async function get_release_info(repo) {
     }
 }
 
+
+function show_news() {
+    let news_div = document.getElementById("news-div");
+    news_div.innerHTML = "";
+    let ul = document.createElement("ul");
+    news_div.appendChild(ul);
+    for (let release of release_infos) {
+        // let d = release.date.toUTCString().split(" ").slice(0, 4).join(" ");
+        let d = release.date.toISOString().split("T")[0].split("-").reverse().join("-")
+        let li = document.createElement("li");
+        li.innerHTML = "<code>" + d + "</code> Release " + release.name + " <a href='" + release.url + "'>" + release.tag + "</a>"
+        ul.appendChild(li);
+    }
+    for (let i=release_infos.length; i<6; i++) {
+        let li = document.createElement("li");
+        li.innerHTML = "..."
+        ul.appendChild(li);
+    }
+}
+
+
 async function create_news() {
     let repos = ["pygfx/pygfx", "pygfx/wgpu-py", "pygfx/rendercanvas"];
     let releases = [];
@@ -62,16 +94,12 @@ async function create_news() {
 
     releases.sort((a, b) => (a.date < b.date));
 
-    let news_div = document.getElementById("news-div");
-    news_div.innerHTML = "";
-    let ul = document.createElement("ul");
-    news_div.appendChild(ul);
-    for (release of releases) {
-        // let d = release.date.toUTCString().split(" ").slice(0, 4).join(" ");
-        let d = release.date.toISOString().split("T")[0].split("-").reverse().join("-")
-        let li = document.createElement("li");
-        li.innerHTML = "<code>" + d + "</code> Release " + release.name + " <a href='" + release.url + "'>" + release.tag + "</a>"
-        ul.appendChild(li);
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    for (let release of releases) {
+        release_infos.push(release);
+        show_news()
+        await sleep(200);
     }
 }
 
@@ -188,7 +216,7 @@ Pygfx is open source and free to use. To develop these projects we rely on fundi
     <div class=sponsorbox>
         <h3>Ramona optics</h3>
         <a href='https://www.ramonaoptics.com/'>https://ramonaoptics.com</a><br>
-        <img height=75 src='https://www.ramonaoptics.com/icons/icon-256x256.png' />
+        <img height=75 src='ramona.png' />
     </div>
 
     <div class=sponsorbox>
