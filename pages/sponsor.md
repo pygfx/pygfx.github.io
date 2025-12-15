@@ -13,8 +13,13 @@ As a sponsor you don't pay for *using* Pygfx, you pay for its continued growth. 
 
 ## <i class='fas'></i> How funds are used
 
-Funds for Pygfx are primarily used to fund our developer time. This includes the work on Pygfx itself, keeping wgpu-py up-to-date with the development of WebGPU, and maintaining other dependencies like the render canvas.
-Surplus funds are used as a buffer (to create some runway), onboarding additional developers, and maybe organize an event.
+The received funds are dedicated for the progress of PyGfx and
+lower-level libraries (wgpu-py, rendercanvas, and pylinalg). So it
+includes the work on Pygfx itself, keeping wgpu-py up-to-date with the
+development of WebGPU, and improving and maintaining core dependencies
+like rendercanvas. Funds are primarily used for developer time. Surplus
+funds are used as a buffer (to create some runway), onboarding
+additional developers, and maybe organize an event.
 
 
 ## <i class='fas'></i> What you get

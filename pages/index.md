@@ -40,6 +40,8 @@ var recent_blog_posts = [];
 
 var news_items = [];
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 
 async function get_release_info(repo) {
     let url = "https://api.github.com/repos/" + repo + "/releases?per_page=1";
@@ -60,7 +62,7 @@ async function get_release_info(repo) {
             };
             releases.push(info);
         }
-        return releases;
+        return releases;  // length matches 'per_page' in query string
     } catch (error) {
         console.warn("Could not fetch release info for "+ repo + ": " + error.message);
     }
@@ -91,27 +93,31 @@ function show_news() {
 }
 
 
+async function add_news_item(post) {
+    news_items.push(post);
+    news_items.sort((a, b) => (a.date < b.date));
+    show_news();
+    await sleep(20);
+}
+
+
 async function create_news() {
     let repos = ["pygfx/pygfx", "pygfx/wgpu-py", "pygfx/rendercanvas", "pygfx/pylinalg"];
-    let pending_news_items = [];
-    for (let repo of repos) {
-        let repo_releases = await get_release_info(repo);
-        pending_news_items.push(...repo_releases);
-    }
+
+    news_items.length = 0; // clear
+
     for (let post of recent_blog_posts) {
         post.date = new Date(post.date);
-        pending_news_items.push(post)
+        await add_news_item(post)
     }
 
-    pending_news_items.sort((a, b) => (a.date < b.date));
-
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    for (let news_item of pending_news_items) {
-        news_items.push(news_item);
-        show_news()
-        await sleep(200);
+    for (let repo of repos) {
+        let repo_releases = await get_release_info(repo);
+        for (let post of repo_releases) {
+            await add_news_item(post);
+        }
     }
+
 }
 
 create_news();
@@ -144,7 +150,7 @@ The following projects fall under the pygfx.org umbrella:
         <a class='button' href='https://wgpu-py.readthedocs.io'><i class='fas'></i> Docs</a>
         <a class='button' href='https://github.com/pygfx/wgpu-py'><i class='fab'></i> Source</a>
         <h3>wgpu-py</h3>
-        WebGPU for Python. Pygfx uses this to control your GPU.
+        WebGPU for Python. Pygfx uses this to access your GPU.
     </div>
 
     <div class=projectbox>
@@ -152,7 +158,7 @@ The following projects fall under the pygfx.org umbrella:
         <a class='button' href='https://github.com/pygfx/rendercanvas'><i class='fab'></i> Source</a>
         <h3>RenderCanvas</h3>
         One canvas API, multiple backends. Enables Pygfx to
-        render into an Qt/wx application, Jupyter notebook, and more.
+        render into a native window, a Qt application, a Jupyter notebook, and more.
     </div>
 
     <div class=projectbox>
