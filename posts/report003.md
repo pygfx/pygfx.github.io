@@ -88,7 +88,7 @@ bitmap-present the default for Qt, which solves many issues our users were facin
 
 There were also features that we planned to do in 2025, but that we did not mange to do in 2025.
 
-* The 'update propagation' work, including a new `View` class in PyGfx (although some of the scheduling improvements in rendercanvas relate to this).
+* The 'update propagation' work. The scheduling improvements and the async work laid the foundations, but we need to finish things in PyGfx, e.g. a new `View` class and async picking.
 * Log plots and map projections.
 
 
@@ -107,7 +107,7 @@ More or less in order of urgency:
 
 ## Funding
 
-In 2025 we received generous funding from the Flatiron Institute and from Ramona Optics. Together with some buildup runway in 2025 this helped us through 2025. We are very grateful for these funds; without these, PyGfx, wgpu-py and rendercanvas would probably be abandonware. 
+In 2025 we received generous funding from the Flatiron Institute and from Ramona Optics. Together with some buildup runway in 2025 this helped us through 2025. We are very grateful for these funds; without these, PyGfx, wgpu-py and rendercanvas would probably be abandonware.
 
 For 2026, both current sponsors continue to support PyGfx, although with smaller amounts. We also applied for a European grant, for which we passed the first round, and hope to hear the verdict soon.
 
