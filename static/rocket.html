@@ -1,13 +1,22 @@
-"""
-    Interactive visualizations anywhere
-        Almar Klein - Euroscipy 2026
+<!doctype html>
+<html>
 
-Rendering code:
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>RenderCanvas Pyodide example</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v314.0.2/full/pyodide.js"></script>
+</head>
 
-numpy array NxMx4  -- bitmap -->   Canvas
-react             <-- events --
+<body>
+    <h3>The Rocket Game, in the browser, on Pyodide!</h3>
+    <div id="canvas" class='renderview-wrapper has-titlebar is-resizable' style="width:800px; height:600px"
+        style="background: #aaa;">
+    </div>
+    <br><br>
 
-"""
+    <script type="text/javascript">
+        async function main() {
+            pythonCode = `
 
 from rendercanvas.auto import RenderCanvas, loop
 from rocket_game import RocketGame
@@ -16,6 +25,8 @@ import numpy as np
 game = RocketGame()
 
 canvas = RenderCanvas(update_mode="continuous")
+
+ctx = canvas.get_bitmap_context()
 
 
 @canvas.add_event_handler("key_down", "key_up")
@@ -31,16 +42,14 @@ def on_key(event: dict):
         game.toggle_shoot(is_down)
 
 
-# ctx = canvas.get_bitmap_context()
-
-
-# @canvas.request_draw
+@canvas.request_draw
 def animate():
     w, h = ctx.physical_size
     ratio = ctx.pixel_ratio
 
     game.set_world_size(w, h, ratio)
     game.auto_tick()
+    canvas.set_title(f"Score: {game.score}")
 
     arr = np.zeros((h, w, 4), np.uint8)
     arr[:, :, 3] = 255
@@ -64,111 +73,24 @@ def animate():
     ctx.set_bitmap(arr)
 
 
-import pygfx as gfx
-import pylinalg as la
-
-renderer = gfx.WgpuRenderer(canvas)
-
-SIZE = 600
-game.set_world_size(SIZE, SIZE)
-
-
-scene = gfx.Scene()
-
-background = gfx.Background.from_color("#000")
-scene.add(background)
-
-grid = gfx.Grid(
-    None,
-    gfx.GridMaterial(
-        major_step=100,
-        minor_step=10,
-        major_thickness=4,
-        minor_thickness=0.5,
-        thickness_space="world",
-        infinite=False,
-    ),
-    orientation="xy",
-)
-grid.local.z = -10
-grid.local.scale = SIZE
-scene.add(grid)
-
-
-ship = gfx.Group()
-scene.add(ship)
-
-ship_mesh = gfx.Mesh(
-    gfx.geometries.cone_geometry(10, 20), gfx.MeshPhongMaterial(color="#48f")
-)
-ship_mesh.local.rotation = la.quat_from_axis_angle((0, 1, 0), np.pi / 2)
-ship.add(ship_mesh)
-
-
-enemies = gfx.InstancedMesh(
-    gfx.torus_knot_geometry(10, 3, 128, 32),
-    # gfx.sphere_geometry(10),
-    gfx.MeshPhongMaterial(color="#ff0"),
-    game.MAX_ENTITIES,
-)
-scene.add(enemies)
-
-bullets = gfx.Points(
-    gfx.Geometry(positions=np.zeros((game.MAX_ENTITIES, 3), np.float32)),
-    gfx.PointsMaterial(size=5, size_space="world", color="#fff"),
-)
-scene.add(bullets)
-
-particles = gfx.Points(
-    gfx.Geometry(
-        positions=np.zeros((game.MAX_ENTITIES, 3), np.float32),
-        sizes=np.zeros((game.MAX_ENTITIES,), np.float32),
-    ),
-    gfx.PointsGaussianBlobMaterial(
-        size_space="world", size_mode="vertex", color="#f0f", alpha_mode="add"
-    ),
-)
-scene.add(particles)
-
-
-camera = gfx.PerspectiveCamera()
-camera.local.scale_y = -1
-if False:
-    camera.show_pos((1, 0, 0), up=(0, 0, -1))
-    camera.local.position = -200, 0, 50
-    ship.add(camera)
-else:
-    camera.show_rect(0, SIZE, 0, SIZE)
-
-scene.add(gfx.AmbientLight("#fff", 0.4), gfx.DirectionalLight())
-
-
-@canvas.request_draw
-def animate_pygfx():
-    game.auto_tick()
-    canvas.set_title(f"RocketGame on pygfx - score {game.score} - $backend $fps fps")
-
-    ship.local.position = (*game.ship, 0)
-    ship.local.rotation = la.quat_from_axis_angle((0, 0, 1), game.ship_angle)
-    renderer.render(scene, camera)
-
-    n = game.enemies.shape[0]
-    for i, (x, y) in enumerate(game.enemies):
-        m = la.mat_from_translation((x, y, 0))
-        enemies.set_matrix_at(i, m)
-    enemies.instance_buffer.draw_range = 0, n
-
-    n = game.bullets.shape[0]
-    bullets.geometry.positions.data[:n, :2] = game.bullets
-    bullets.geometry.positions.update_full()
-    bullets.geometry.positions.draw_range = 0, n
-
-    n = game.particles.shape[0]
-    particles.geometry.sizes.data[:n] = game.particles[:, 2] * 25
-    particles.geometry.positions.data[:n, :2] = game.particles[:, :2]
-    particles.geometry.sizes.update_full()
-    particles.geometry.positions.update_full()
-    particles.geometry.positions.draw_range = 0, n
-
-
 loop.run()
+
+            `
+
+            // Load Pyodide
+            let pyodide = await loadPyodide();
+
+            await pyodide.loadPackage("micropip");
+            const micropip = pyodide.pyimport("micropip");
+            await micropip.install('numpy');
+            await micropip.install("rendercanvas");
+            await micropip.install("rocket_game");
+
+            // Run the Python code async
+            pyodide.runPythonAsync(pythonCode);
+        }
+        main();
+    </script>
+</body>
+
+</html>
